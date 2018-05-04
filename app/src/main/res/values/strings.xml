@@ -73,4 +73,8 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="remove_class">Remove Class</string>
+    <string name="show_today_s_plan">Show Today\'s Plan</string>
+    <string name="show_tomorrow_s_plan">Show Tomorrow\'s Plan</string>
+    <string name="add_class">Add Class</string>
 </resources>

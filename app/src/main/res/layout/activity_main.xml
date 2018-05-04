@@ -6,13 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/btnRemoveClass"
+        android:layout_width="213dp"
+        android:layout_height="46dp"
+        android:text="@string/remove_class"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="69dp" />
+
+    <Button
+        android:id="@+id/btnShowToday2"
+        android:layout_width="213dp"
+        android:layout_height="46dp"
+        android:text="@string/show_today_s_plan"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="206dp" />
+
+    <Button
+        android:id="@+id/btnShowTomorrow"
+        android:layout_width="213dp"
+        android:layout_height="46dp"
+        android:text="@string/show_tomorrow_s_plan"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="252dp" />
+
+    <Button
+        android:id="@+id/btnAddClass"
+        android:layout_width="213dp"
+        android:layout_height="46dp"
+        android:text="@string/add_class"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="16dp" />
 
 </android.support.constraint.ConstraintLayout>
