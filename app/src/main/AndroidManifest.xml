@@ -28,6 +28,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.MainActivity" />
         </activity>
+
+        <provider
+            android:authorities="com.capstone.adityanaikdomsangiovanni.wa_agenda.classprovider"
+            android:name=".ClassProvider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

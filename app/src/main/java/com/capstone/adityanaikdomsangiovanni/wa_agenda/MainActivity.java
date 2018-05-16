@@ -1,14 +1,18 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -23,10 +27,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        insertClass("new class");
+
         if(!permissionGranted) {
             checkPermissions();
             return;
         }
+    }
+
+    private void insertClass(String className) {
+        ContentValues values = new ContentValues();
+        values.put(DBOpenHelper.CLASS_TEXT, className);
+        Uri classUri = getContentResolver().insert(ClassProvider.CONTENT_URI, values);
+
+        Log.d("MainActivity", "Inserted class " + classUri.getLastPathSegment());
     }
 
     @Override
