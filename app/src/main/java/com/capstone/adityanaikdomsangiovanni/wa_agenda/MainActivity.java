@@ -1,20 +1,20 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.Manifest;
-import android.annotation.TargetApi;
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,12 +23,12 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
+    private  CursorAdapter cursorAdapter;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,16 +42,16 @@ public class MainActivity extends AppCompatActivity {
 //            return;
 //        }
 
-        Cursor cursor = getContentResolver().query(ClassProvider.CONTENT_URI, DBOpenHelper.ALL_COLUMNS,
-                null, null, null, null);
-
         String[] from = {DBOpenHelper.CLASS_TEXT};
         int[] to = {android.R.id.text1};
 
-        CursorAdapter cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
+       cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
 
         ListView list = (ListView) findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
+
+        //loads cursor and data -  use 'this' class to manage the loader
+        getLoaderManager().initLoader(0, null, this);
     }
 
     private void insertClass(String className) {
@@ -125,5 +125,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+
+    //Methods to load data on background thread
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this, ClassProvider.CONTENT_URI, null, null, null, null);
+    }
+
+    //takes data and passes it to cursor adapter
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursorAdapter.swapCursor(data);
+    }
+
+    //called whenever data needs to be wiped out
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
     }
 }
