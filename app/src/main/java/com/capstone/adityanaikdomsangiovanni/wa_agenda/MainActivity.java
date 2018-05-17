@@ -18,6 +18,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -28,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
     private  CursorAdapter cursorAdapter;
+    private ListView listViewClasses;
+
+    public static final int REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +53,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
        cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
 
-        ListView list = (ListView) findViewById(android.R.id.list);
-        list.setAdapter(cursorAdapter);
+       String[] values = {"Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7"};       //idt this does anyhting
+
+        listViewClasses = (ListView) findViewById(android.R.id.list);
+
+        listViewClasses.setAdapter(cursorAdapter);
+
+        listViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+               @Override
+               public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent myIntent = new Intent(view.getContext(), TasksActivity.class);
+                    startActivityForResult(myIntent,REQUEST_CODE);
+               }
+           });
 
         //loads cursor and data -  use 'this' class to manage the loader
         getLoaderManager().initLoader(0, null, this);
