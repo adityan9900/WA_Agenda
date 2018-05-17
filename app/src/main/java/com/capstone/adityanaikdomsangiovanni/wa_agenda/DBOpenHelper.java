@@ -18,7 +18,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     public static final String CLASS_TEXT = "classText";
     public static final String CLASS_CREATED = "classCreated";
 
-    public static final String[] allColumns = {CLASS_ID, CLASS_TEXT, CLASS_CREATED};
+    public static final String[] ALL_COLUMNS = {CLASS_ID, CLASS_TEXT, CLASS_CREATED};
 
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

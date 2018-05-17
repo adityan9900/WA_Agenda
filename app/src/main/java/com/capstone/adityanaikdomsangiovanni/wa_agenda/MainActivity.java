@@ -1,11 +1,14 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +18,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +36,22 @@ public class MainActivity extends AppCompatActivity {
 
         insertClass("new class");
 
-        if(!permissionGranted) {
-            checkPermissions();
-            return;
-        }
+        //Leave commented out screws up list thing --> idk if this even does anything
+//        if(!permissionGranted) {
+//            checkPermissions();
+//            return;
+//        }
+
+        Cursor cursor = getContentResolver().query(ClassProvider.CONTENT_URI, DBOpenHelper.ALL_COLUMNS,
+                null, null, null, null);
+
+        String[] from = {DBOpenHelper.CLASS_TEXT};
+        int[] to = {android.R.id.text1};
+
+        CursorAdapter cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to, 0);
+
+        ListView list = (ListView) findViewById(android.R.id.list);
+        list.setAdapter(cursorAdapter);
     }
 
     private void insertClass(String className) {

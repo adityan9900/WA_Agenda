@@ -39,8 +39,8 @@ public class ClassProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return database.query(DBOpenHelper.TABLE_CLASSES, DBOpenHelper.allColumns, selection,
-                             null, null, null, DBOpenHelper.CLASS_CREATED);
+        return database.query(DBOpenHelper.TABLE_CLASSES, DBOpenHelper.ALL_COLUMNS, selection,
+                             null, null, null, DBOpenHelper.CLASS_CREATED + " DESC");
     }
 
     @Nullable
