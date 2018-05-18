@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //            return;
 //        }
 
-        String[] from = {DBOpenHelper.CLASS_TEXT};
+        String[] from = {DBClassOpenHelper.CLASS_TEXT};
         int[] to = {android.R.id.text1};
 
        cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
@@ -61,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                @Override
                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent myIntent = new Intent(view.getContext(), TasksActivity.class);
-                    startActivityForResult(myIntent,REQUEST_CODE);
+                    Uri uri = Uri.parse(ClassProvider.CONTENT_URI + "/" + id);
+                    myIntent.putExtra(ClassProvider.CONTENT_ITEM_TYPE, uri);
+                    startActivityForResult(myIntent, REQUEST_CODE);
                }
            });
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void insertClass(String className) {
         ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.CLASS_TEXT, className);
+        values.put(DBClassOpenHelper.CLASS_TEXT, className);
         Uri classUri = getContentResolver().insert(ClassProvider.CONTENT_URI, values);
 
         Log.d("MainActivity", "Inserted class " + classUri.getLastPathSegment());
