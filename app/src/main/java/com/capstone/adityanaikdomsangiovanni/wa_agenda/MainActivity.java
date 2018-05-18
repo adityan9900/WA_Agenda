@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
        cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
 
-       String[] values = {"Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7"};       //idt this does anyhting
-
         listViewClasses = (ListView) findViewById(android.R.id.list);
 
         listViewClasses.setAdapter(cursorAdapter);
