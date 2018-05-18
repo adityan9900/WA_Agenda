@@ -33,7 +33,9 @@
             android:name=".ClassProvider"
             android:authorities="com.capstone.adityanaikdomsangiovanni.wa_agenda.classprovider"
             android:exported="false" />
-
+        <receiver android:name=".AlarmManager"
+            android:enabled="true"
+            android:exported="true"></receiver>
         <activity android:name=".TasksActivity"></activity>
     </application>
 
