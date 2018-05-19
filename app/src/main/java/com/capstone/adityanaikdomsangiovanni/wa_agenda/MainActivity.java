@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,21 +26,56 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
-    private  CursorAdapter cursorAdapter;
     private ListView listViewClasses;
 
     public static final int REQUEST_CODE = 0;
+
+    ClassDataSource classDataSource;
+
+    //TODO: maybe temporary?
+    List<Class> classes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        insertClass("new class");
+        classes = new ArrayList<>();
+
+        //TODO: make it so you can add classes and delete current temporary code
+        classes.add(new Class(null, "english"));
+        classes.add(new Class(null, "math"));
+        classes.add(new Class(null, "chem"));
+        classes.get(0).addTask(new Task(null, "Do Homework"));
+
+        classDataSource = new ClassDataSource(this);
+        classDataSource.open();
+
+        //This method chekc for num items in the database
+        long numItems = classDataSource.getClassCount();
+        if(numItems == 0) {
+            //only load data if it is empty
+            for(Class c : classes) {
+                //catches exception for repeated id's
+                try {
+                    classDataSource.createClass(c);
+                } catch(SQLiteException e) {
+                    e.printStackTrace();
+                }
+            }
+            Toast.makeText(this, "Data inserted!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Data already inserted!", Toast.LENGTH_SHORT).show();
+        }
 
         //Leave commented out screws up list thing --> idk if this even does anything
 //        if(!permissionGranted) {
@@ -47,36 +83,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //            return;
 //        }
 
-        String[] from = {DBClassOpenHelper.CLASS_TEXT};
-        int[] to = {android.R.id.text1};
+        ClassAdapter adapter = new ClassAdapter(this, classes);
 
-       cursorAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
+        listViewClasses = findViewById(android.R.id.list);
 
-        listViewClasses = (ListView) findViewById(android.R.id.list);
-
-        listViewClasses.setAdapter(cursorAdapter);
+        listViewClasses.setAdapter(adapter);
 
         listViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                @Override
                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent myIntent = new Intent(view.getContext(), TasksActivity.class);
-                    Uri uri = Uri.parse(ClassProvider.CONTENT_URI + "/" + id);
-                    myIntent.putExtra(ClassProvider.CONTENT_ITEM_TYPE, uri);
+                    Class clickedClass = classes.get(position);
+                    myIntent.putExtra(ClassAdapter.CLASS_KEY, clickedClass);
                     startActivityForResult(myIntent, REQUEST_CODE);
                }
            });
 
         //loads cursor and data -  use 'this' class to manage the loader
-        getLoaderManager().initLoader(0, null, this);
+ //       getLoaderManager().initLoader(0, null, this);
     }
 
-    private void insertClass(String className) {
-        ContentValues values = new ContentValues();
-        values.put(DBClassOpenHelper.CLASS_TEXT, className);
-        Uri classUri = getContentResolver().insert(ClassProvider.CONTENT_URI, values);
-
-        Log.d("MainActivity", "Inserted class " + classUri.getLastPathSegment());
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,22 +169,33 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
-
-    //Methods to load data on background thread
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, ClassProvider.CONTENT_URI, null, null, null, null);
+    protected void onPause() {
+        super.onPause();
+        classDataSource.close();
     }
 
-    //takes data and passes it to cursor adapter
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(data);
+    protected void onResume() {
+        super.onResume();
+        classDataSource.open();
     }
 
-    //called whenever data needs to be wiped out
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
-    }
+//    //Methods to load data on background thread
+//    @Override
+//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+//        return new CursorLoader(this, ClassProvider.CONTENT_URI, null, null, null, null);
+//    }
+//
+//    //takes data and passes it to cursor adapter
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//        cursorAdapter.swapCursor(data);
+//    }
+//
+//    //called whenever data needs to be wiped out
+//    @Override
+//    public void onLoaderReset(Loader<Cursor> loader) {
+//        cursorAdapter.swapCursor(null);
+//    }
 }
