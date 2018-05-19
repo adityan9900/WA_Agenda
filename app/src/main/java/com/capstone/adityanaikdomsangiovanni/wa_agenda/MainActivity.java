@@ -2,6 +2,9 @@ package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.Manifest;
 import android.app.LoaderManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -14,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
     private ListView listViewClasses;
+    private TimePicker timePicker;
+
+
+    public Notification.Builder notificationBuilder;
 
     public static final int REQUEST_CODE = 0;
 
@@ -46,6 +55,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Intent intent = new Intent();
+        PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this,0,intent,0 );
+        Notification noti = new Notification.Builder(MainActivity.this)
+                .setContentTitle("TITLE OF THING")  ///this will be the title of the alert
+                .setTicker("Ticker Text")
+                .setSmallIcon(R.drawable.ic_info_black_24dp)
+                .setContentIntent(pIntent).getNotification();
+
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(0,noti);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
