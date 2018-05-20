@@ -50,6 +50,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.TasksActivity" />
         </activity>
+        <activity
+            android:name=".AddClassActivity"
+            android:label="@string/title_add_class"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -31,15 +32,19 @@ public class MainActivity extends AppCompatActivity {
     private ListView listViewClasses;
     private TimePicker timePicker;
 
+    private FloatingActionButton addClassButton;
 
     public Notification.Builder notificationBuilder;
 
     public static final int SHOW_TASKS_REQUEST_CODE = 0;
+    public static final int ADD_CLASS_REQUEST_CODE = 2;
+
+    public static final String CLASS_LIST_KEY = "class_list_key";
 
     ClassDataSource classDataSource;
 
     //TODO: maybe temporary?
-    List<Class> classes;
+    ArrayList<Class> classes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        addClassButton = findViewById(R.id.addNewClass);
 
         classes = new ArrayList<>();
 
@@ -81,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            Toast.makeText(this, "Data inserted!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Data already inserted!", Toast.LENGTH_SHORT).show();
         }
 
         //Leave commented out screws up list thing --> idk if this even does anything
@@ -107,6 +111,15 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(myIntent, SHOW_TASKS_REQUEST_CODE);
                }
            });
+
+        addClassButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(v.getContext(), AddClassActivity.class);
+                myIntent.putParcelableArrayListExtra(CLASS_LIST_KEY, classes);
+                startActivityForResult(myIntent, ADD_CLASS_REQUEST_CODE);
+            }
+        });
 
         //loads cursor and data -  use 'this' class to manage the loader
  //       getLoaderManager().initLoader(0, null, this);

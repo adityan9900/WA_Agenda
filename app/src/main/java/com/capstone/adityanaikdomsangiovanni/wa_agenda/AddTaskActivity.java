@@ -76,7 +76,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             public void onClick(View v) {
                 //TODO: error check date too
                 if(taskNameInput.getText().toString().equals("") || yearSelected == 0 || monthSelected == 0 || daySelected == 0) {
-                    Toast.makeText(AddTaskActivity.this, "Invalid Class Name or Date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddTaskActivity.this, "Invalid Task Name or Date", Toast.LENGTH_SHORT).show();
                 } else {
                     Task newTask = new Task(null, taskNameInput.getText().toString(), yearSelected, monthSelected, daySelected);
                     currClass.getTasks().add(newTask);
