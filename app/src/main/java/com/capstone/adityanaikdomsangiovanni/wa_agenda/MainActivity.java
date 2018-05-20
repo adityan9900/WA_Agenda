@@ -1,40 +1,28 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.Manifest;
-import android.app.LoaderManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public Notification.Builder notificationBuilder;
 
-    public static final int REQUEST_CODE = 0;
+    public static final int SHOW_TASKS_REQUEST_CODE = 0;
 
     ClassDataSource classDataSource;
 
@@ -76,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
         classes.add(new Class(null, "english"));
         classes.add(new Class(null, "math"));
         classes.add(new Class(null, "chem"));
-        classes.get(0).addTask(new Task(null, "Do Homework"));
+        classes.get(0).addTask(new Task(null, "Do Homework", 2018, 1, 1));
 
         classDataSource = new ClassDataSource(this);
         classDataSource.open();
 
-        //This method chekc for num items in the database
+        //This method check for num items in the database
         long numItems = classDataSource.getClassCount();
         if(numItems == 0) {
             //only load data if it is empty
@@ -116,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent myIntent = new Intent(view.getContext(), TasksActivity.class);
                     Class clickedClass = classes.get(position);
                     myIntent.putExtra(ClassAdapter.CLASS_KEY, clickedClass);
-                    startActivityForResult(myIntent, REQUEST_CODE);
+                    startActivityForResult(myIntent, SHOW_TASKS_REQUEST_CODE);
                }
            });
 
@@ -201,22 +189,4 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         classDataSource.open();
     }
-
-//    //Methods to load data on background thread
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        return new CursorLoader(this, ClassProvider.CONTENT_URI, null, null, null, null);
-//    }
-//
-//    //takes data and passes it to cursor adapter
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        cursorAdapter.swapCursor(data);
-//    }
-//
-//    //called whenever data needs to be wiped out
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> loader) {
-//        cursorAdapter.swapCursor(null);
-//    }
 }

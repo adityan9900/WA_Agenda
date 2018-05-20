@@ -4,26 +4,43 @@ import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.sql.Date;
 import java.util.UUID;
 
 public class Task implements Parcelable {
 
     private String taskName;
     private String taskID;
+    private int year, month, day;
 
-    //TODO: add due date
+    //TODO: figure out data type of date
+    //private Date dueDate;
 
-    public Task(String taskID, String taskName) {
+    public Task(String taskID, String taskName, int year, int month, int day) {
         if(taskID == null) {
             taskID = UUID.randomUUID().toString();
         }
-
+        this.year = year;
+        this.month = month;
+        this.day = day;
         this.taskID = taskID;
         this.taskName = taskName;
     }
 
     public String getTaskName() {
         return taskName;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
     }
 
     public ContentValues toValues() {
@@ -34,6 +51,22 @@ public class Task implements Parcelable {
         values.put(TaskTable.TASK_TEXT, taskName);
 
         return values;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 
     @Override

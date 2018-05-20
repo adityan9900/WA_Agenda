@@ -29,14 +29,27 @@
                 android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.MainActivity" />
         </activity>
 
-        <provider
-            android:name=".ClassProvider"
-            android:authorities="com.capstone.adityanaikdomsangiovanni.wa_agenda.classprovider"
-            android:exported="false" />
-        <receiver android:name=".AlarmManager"
+        <receiver
+            android:name=".AlarmManager"
             android:enabled="true"
-            android:exported="true"></receiver>
-        <activity android:name=".TasksActivity"></activity>
+            android:exported="true" />
+
+        <activity
+            android:name=".TasksActivity"
+            android:label="@string/title_task_activity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AddTaskActivity"
+            android:label="@string/title_add_task"
+            android:parentActivityName=".TasksActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.TasksActivity" />
+        </activity>
     </application>
 
 </manifest>

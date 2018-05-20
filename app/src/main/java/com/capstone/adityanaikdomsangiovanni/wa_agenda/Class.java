@@ -34,6 +34,10 @@ public class Class implements Parcelable {
         return values;
     }
 
+    public String getClassID() {
+        return classID;
+    }
+
     public String getClassName() {
         return className;
     }
