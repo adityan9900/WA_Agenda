@@ -1,11 +1,16 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.os.Build;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -87,6 +92,25 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             }
         });
 
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                upIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    TaskStackBuilder.create(this)
+                            .addNextIntentWithParentStack(upIntent)
+                            .startActivities();
+                } else {
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

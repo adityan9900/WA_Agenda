@@ -50,7 +50,7 @@ public class TasksActivity extends AppCompatActivity {
         taskDataSource = new TaskDataSource(this);
         taskDataSource.open();
 
-        //This method chekc for num items in the database
+        //This method check for num items in the database
         long numItems = taskDataSource.getTaskCount();
         if(numItems == 0) {
             //only load data if it is empty
