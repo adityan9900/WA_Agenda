@@ -1,8 +1,10 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.os.Build;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -39,8 +42,11 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
     private Class currClass;
     private Task currTask;
 
+    private PendingIntent pendingIntent;
+    private AlarmManager alarmManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
 
@@ -75,7 +81,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                 dpd.show();
             }
         });
-
+        final Intent my_Intent = new Intent(this,Alarm_Receiver.class);   //used for notifications
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,9 +94,17 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     Intent myIntent = new Intent(v.getContext(), TasksActivity.class);
                     myIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
                     startActivityForResult(myIntent, INSERT_TASK_REQUEST_CODE);
+                    //notifications
+                    alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                    pendingIntent = PendingIntent.getBroadcast(AddTaskActivity.this,0,my_Intent,0);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis()-21600000,pendingIntent);    //6pm day before
+
                 }
             }
         });
+
+
+
 
     }
 

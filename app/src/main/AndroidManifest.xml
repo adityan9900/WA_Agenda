@@ -29,11 +29,6 @@
                 android:value="com.capstone.adityanaikdomsangiovanni.wa_agenda.MainActivity" />
         </activity>
 
-        <receiver
-            android:name=".AlarmManager"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
             android:name=".TasksActivity"
             android:label="@string/title_task_activity"

@@ -1,10 +1,12 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
 import android.Manifest;
+import android.app.LoaderManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -21,20 +23,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.database.Cursor;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
     private ListView listViewClasses;
-    private TimePicker timePicker;
+
+
 
     private FloatingActionButton addClassButton;
 
-    public Notification.Builder notificationBuilder;
 
     public static final int SHOW_TASKS_REQUEST_CODE = 0;
     public static final int ADD_CLASS_REQUEST_CODE = 2;
@@ -48,17 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Intent intent = new Intent();
-        PendingIntent pIntent = PendingIntent.getActivity(MainActivity.this,0,intent,0 );
-        Notification noti = new Notification.Builder(MainActivity.this)
-                .setContentTitle("TITLE OF THING")  ///this will be the title of the alert
-                .setTicker("Ticker Text")
-                .setSmallIcon(R.drawable.ic_info_black_24dp)
-                .setContentIntent(pIntent).getNotification();
-
-        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        nm.notify(0,noti);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -120,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(myIntent, ADD_CLASS_REQUEST_CODE);
             }
         });
+
+
+
 
         //loads cursor and data -  use 'this' class to manage the loader
  //       getLoaderManager().initLoader(0, null, this);
@@ -202,4 +196,5 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         classDataSource.open();
     }
+
 }
