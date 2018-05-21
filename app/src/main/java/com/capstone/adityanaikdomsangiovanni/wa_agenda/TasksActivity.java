@@ -86,6 +86,7 @@ public class TasksActivity extends AppCompatActivity {
 
         if(((Integer) getIntent().getExtras().get(TASK_ACTION_KEY)).intValue() == ACTION_ADD_TASK) {
             currClass.addTask((Task) getIntent().getExtras().get(TaskAdapter.TASK_KEY));
+            Toast.makeText(this, "Task added!", Toast.LENGTH_SHORT).show();
         }
 
         if(currClass == null) {
@@ -110,9 +111,6 @@ public class TasksActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            Toast.makeText(this, "Data inserted!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Data already inserted!", Toast.LENGTH_SHORT).show();
         }
 
         adapter = new TaskAdapter(this, tasks);

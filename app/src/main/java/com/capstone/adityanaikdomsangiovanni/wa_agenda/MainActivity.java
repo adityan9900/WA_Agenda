@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -25,13 +27,18 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.database.Cursor;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
 
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private boolean permissionGranted;
-    private ListView listViewClasses;
+    private SwipeMenuListView listViewClasses;
 
     public static final String CLASS_ACTION_KEY = "class_action_key";
     public static final int ACTION_SHOW_CLASSES = 0;
@@ -47,6 +54,8 @@ public class MainActivity extends AppCompatActivity{
 
     ClassDataSource classDataSource;
 
+    ClassAdapter adapter;
+
     //TODO: maybe temporary?
     ArrayList<Class> classes = new ArrayList<>();
 
@@ -55,6 +64,25 @@ public class MainActivity extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                //set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                //set item width
+                deleteItem.setWidth(340);
+                //set a icon
+                deleteItem.setIcon(R.drawable.ic_delete_black_24dp);
+                //add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
 
         addClassButton = findViewById(R.id.addNewClass);
 
@@ -76,6 +104,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             } else if (((Integer) getIntent().getExtras().get(CLASS_ACTION_KEY)).intValue() == ACTION_ADD_CLASS) {
                 classes.add((Class) getIntent().getExtras().get(ClassAdapter.CLASS_KEY));
+                Toast.makeText(this, "Class added!", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -102,11 +131,23 @@ public class MainActivity extends AppCompatActivity{
 //            return;
 //        }
 
-        ClassAdapter adapter = new ClassAdapter(this, classes);
+        adapter = new ClassAdapter(this, classes);
 
         listViewClasses = findViewById(android.R.id.list);
 
+        listViewClasses.setMenuCreator(creator);
+
         listViewClasses.setAdapter(adapter);
+
+        listViewClasses.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                classes.remove(position);
+                adapter.notifyDataSetChanged();
+                //returning false closes the menu
+                return false;
+            }
+        });
 
         listViewClasses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                @Override
@@ -129,31 +170,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-
-
-
-        //loads cursor and data -  use 'this' class to manage the loader
- //       getLoaderManager().initLoader(0, null, this);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if(id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     // Checks if external storage is available for read and write
