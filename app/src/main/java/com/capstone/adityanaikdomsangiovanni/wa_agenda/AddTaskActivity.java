@@ -90,9 +90,10 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     Toast.makeText(AddTaskActivity.this, "Invalid Task Name or Date", Toast.LENGTH_SHORT).show();
                 } else {
                     Task newTask = new Task(null, taskNameInput.getText().toString(), yearSelected, monthSelected, daySelected);
-                    currClass.getTasks().add(newTask);
                     Intent myIntent = new Intent(v.getContext(), TasksActivity.class);
                     myIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
+                    myIntent.putExtra(TasksActivity.TASK_ACTION_KEY, TasksActivity.ACTION_ADD_TASK);
+                    myIntent.putExtra(TaskAdapter.TASK_KEY, newTask);
                     startActivityForResult(myIntent, INSERT_TASK_REQUEST_CODE);
                     //notifications
                     alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -115,6 +116,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
             case android.R.id.home:
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
                 upIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
+                upIntent.putExtra(TasksActivity.TASK_ACTION_KEY, TasksActivity.ACTION_SHOW_TASKS);
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
                     TaskStackBuilder.create(this)
                             .addNextIntentWithParentStack(upIntent)

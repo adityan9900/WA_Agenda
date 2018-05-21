@@ -38,6 +38,12 @@ public class TasksActivity extends AppCompatActivity {
 
     private TaskAdapter adapter;
 
+    public static final String TASK_ACTION_KEY = "task_action_key";
+    public static final int ACTION_SHOW_TASKS = 0;
+    public static final int ACTION_ADD_TASK = 1;
+
+    private int currAction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,14 +56,14 @@ public class TasksActivity extends AppCompatActivity {
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
-                // set item background
+                //set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
-                // set item width
+                //set item width
                 deleteItem.setWidth(340);
-                // set a icon
+                //set a icon
                 deleteItem.setIcon(R.drawable.ic_delete_black_24dp);
-                // add to menu
+                //add to menu
                 menu.addMenuItem(deleteItem);
             }
         };
@@ -70,6 +76,10 @@ public class TasksActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         currClass = intent.getExtras().getParcelable(ClassAdapter.CLASS_KEY);
+
+        if(((Integer) getIntent().getExtras().get(TASK_ACTION_KEY)).intValue() == ACTION_ADD_TASK) {
+            currClass.addTask((Task) getIntent().getExtras().get(TaskAdapter.TASK_KEY));
+        }
 
         if(currClass == null) {
             Toast.makeText(this, "No Data Received", Toast.LENGTH_SHORT);

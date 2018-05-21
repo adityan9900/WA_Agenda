@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class TaskAdapter extends ArrayAdapter<Task> {
@@ -39,7 +41,12 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 
         TextView tv = convertView.findViewById(R.id.nameText);
 
-        tv.setText(currTask.getTaskName());
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, currTask.getYear());
+        c.set(Calendar.MONTH, currTask.getMonth() - 1);
+        c.set(Calendar.DAY_OF_MONTH, currTask.getDay());
+        String date = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+        tv.setText(currTask.getTaskName() + " - " + date);
 
         return convertView;
     }

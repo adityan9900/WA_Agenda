@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity{
                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent myIntent = new Intent(view.getContext(), TasksActivity.class);
                     Class clickedClass = classes.get(position);
+                    myIntent.putExtra(TasksActivity.TASK_ACTION_KEY, TasksActivity.ACTION_SHOW_TASKS);
                     myIntent.putExtra(ClassAdapter.CLASS_KEY, clickedClass);
                     startActivityForResult(myIntent, SHOW_TASKS_REQUEST_CODE);
                }

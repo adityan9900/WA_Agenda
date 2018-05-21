@@ -16,7 +16,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:text="TextView"
         android:textColor="@color/colorPrimaryDark"
         tools:ignore="HardcodedText"/>
