@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
@@ -44,11 +45,16 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
 
     private PendingIntent pendingIntent;
     private AlarmManager alarmManager;
+
+    ArrayList<Class> currClassList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+
+        currClassList = getIntent().getExtras().getParcelableArrayList(MainActivity.CLASS_LIST_KEY);
 
         setTitle("Add Task");
 
@@ -94,6 +100,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                     myIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
                     myIntent.putExtra(TasksActivity.TASK_ACTION_KEY, TasksActivity.ACTION_ADD_TASK);
                     myIntent.putExtra(TaskAdapter.TASK_KEY, newTask);
+                    myIntent.putParcelableArrayListExtra(MainActivity.CLASS_LIST_KEY, currClassList);
                     startActivityForResult(myIntent, INSERT_TASK_REQUEST_CODE);
                     //notifications
                     alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -117,6 +124,7 @@ public class AddTaskActivity extends AppCompatActivity implements DatePickerDial
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
                 upIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
                 upIntent.putExtra(TasksActivity.TASK_ACTION_KEY, TasksActivity.ACTION_SHOW_TASKS);
+                upIntent.putParcelableArrayListExtra(MainActivity.CLASS_LIST_KEY, currClassList);
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
                     TaskStackBuilder.create(this)
                             .addNextIntentWithParentStack(upIntent)

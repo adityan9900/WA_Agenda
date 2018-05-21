@@ -1,14 +1,19 @@
 package com.capstone.adityanaikdomsangiovanni.wa_agenda;
 
+import android.annotation.TargetApi;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -42,12 +47,14 @@ public class TasksActivity extends AppCompatActivity {
     public static final int ACTION_SHOW_TASKS = 0;
     public static final int ACTION_ADD_TASK = 1;
 
-    private int currAction;
+    ArrayList<Class> currClassList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+
+        currClassList = getIntent().getExtras().getParcelableArrayList(MainActivity.CLASS_LIST_KEY);
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -129,8 +136,30 @@ public class TasksActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(v.getContext(), AddTaskActivity.class);
                 myIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
+                myIntent.putParcelableArrayListExtra(MainActivity.CLASS_LIST_KEY, currClassList);
                 startActivityForResult(myIntent, ADD_TASK_REQUEST_CODE);
             }
         });
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                upIntent.putExtra(MainActivity.CLASS_ACTION_KEY, MainActivity.ACTION_MODIFY_CLASS);
+                upIntent.putExtra(ClassAdapter.CLASS_KEY, currClass);
+                upIntent.putParcelableArrayListExtra(MainActivity.CLASS_LIST_KEY, currClassList);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    TaskStackBuilder.create(this)
+                            .addNextIntentWithParentStack(upIntent)
+                            .startActivities();
+                } else {
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -33,10 +33,12 @@ public class MainActivity extends AppCompatActivity{
     private boolean permissionGranted;
     private ListView listViewClasses;
 
-
+    public static final String CLASS_ACTION_KEY = "class_action_key";
+    public static final int ACTION_SHOW_CLASSES = 0;
+    public static final int ACTION_ADD_CLASS = 1;
+    public static final int ACTION_MODIFY_CLASS = 2;
 
     private FloatingActionButton addClassButton;
-
 
     public static final int SHOW_TASKS_REQUEST_CODE = 0;
     public static final int ADD_CLASS_REQUEST_CODE = 2;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity{
     ClassDataSource classDataSource;
 
     //TODO: maybe temporary?
-    ArrayList<Class> classes;
+    ArrayList<Class> classes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +58,26 @@ public class MainActivity extends AppCompatActivity{
 
         addClassButton = findViewById(R.id.addNewClass);
 
-        classes = new ArrayList<>();
-
         //TODO: make it so you can add classes and delete current temporary code
-        classes.add(new Class(null, "english"));
-        classes.add(new Class(null, "math"));
-        classes.add(new Class(null, "chem"));
-        classes.get(0).addTask(new Task(null, "Do Homework", 2018, 1, 1));
+//        classes.add(new Class(null, "english"));
+//        classes.add(new Class(null, "math"));
+//        classes.add(new Class(null, "chem"));
+//        classes.get(0).addTask(new Task(null, "Do Homework", 2018, 1, 1));
+
+        if(getIntent().getExtras() != null) {
+            classes = getIntent().getExtras().getParcelableArrayList(MainActivity.CLASS_LIST_KEY);
+            if (((Integer) getIntent().getExtras().get(CLASS_ACTION_KEY)).intValue() == ACTION_MODIFY_CLASS) {
+                Class newClass = (Class) getIntent().getExtras().get(ClassAdapter.CLASS_KEY);
+                for (int i = 0; i < classes.size(); i++) {
+                    if (classes.get(i).getClassID().equals(newClass.getClassID())) {
+                        classes.set(i, newClass);
+                        break;
+                    }
+                }
+            } else if (((Integer) getIntent().getExtras().get(CLASS_ACTION_KEY)).intValue() == ACTION_ADD_CLASS) {
+                classes.add((Class) getIntent().getExtras().get(ClassAdapter.CLASS_KEY));
+            }
+        }
 
         classDataSource = new ClassDataSource(this);
         classDataSource.open();
@@ -100,6 +115,7 @@ public class MainActivity extends AppCompatActivity{
                     Class clickedClass = classes.get(position);
                     myIntent.putExtra(TasksActivity.TASK_ACTION_KEY, TasksActivity.ACTION_SHOW_TASKS);
                     myIntent.putExtra(ClassAdapter.CLASS_KEY, clickedClass);
+                    myIntent.putParcelableArrayListExtra(MainActivity.CLASS_LIST_KEY, classes);
                     startActivityForResult(myIntent, SHOW_TASKS_REQUEST_CODE);
                }
            });
