@@ -12,7 +12,7 @@ public class Class implements Parcelable {
 
     private String classID;
     private String className;
-    private List<Task> classTasks;
+    private ArrayList<Task> classTasks;
 
     public Class(String classID, String className) {
         if(classID == null) {
@@ -46,7 +46,7 @@ public class Class implements Parcelable {
         classTasks.add(t);
     }
 
-    public List<Task> getTasks() {
+    public ArrayList<Task> getTasks() {
         return classTasks;
     }
 
