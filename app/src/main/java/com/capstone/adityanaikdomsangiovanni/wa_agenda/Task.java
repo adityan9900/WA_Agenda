@@ -69,6 +69,7 @@ public class Task implements Parcelable {
         this.day = day;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -77,13 +78,21 @@ public class Task implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.taskName);
+        dest.writeString(this.taskID);
+        dest.writeInt(this.year);
+        dest.writeInt(this.month);
+        dest.writeInt(this.day);
     }
 
     protected Task(Parcel in) {
         this.taskName = in.readString();
+        this.taskID = in.readString();
+        this.year = in.readInt();
+        this.month = in.readInt();
+        this.day = in.readInt();
     }
 
-    public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
         @Override
         public Task createFromParcel(Parcel source) {
             return new Task(source);
